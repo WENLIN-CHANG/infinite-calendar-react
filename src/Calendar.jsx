@@ -1,9 +1,29 @@
+import { use, useState } from "react";
+
 function Calendar() {
-  const year = 2025;
-  const month = 10;
+  const [year, setYear] = useState(2025);
+  const [month, setMonth] = useState(10);
   const firstDay = new Date(year, month - 1, 1).getDay();
   const daysInMonth = new Date(year, month, 0).getDate();
   const days = [];
+
+  const nextMonth = () => {
+    if (month === 12) {
+      setYear(year + 1);
+      setMonth(1);
+    } else {
+      setMonth(month + 1);
+    }
+  };
+
+  const prevMonth = () => {
+    if (month === 1) {
+      setYear(year - 1);
+      setMonth(12);
+    } else {
+      setMonth(month - 1);
+    }
+  };
 
   for (let i = 0; i < firstDay; i++) {
     days.push('')
@@ -15,7 +35,11 @@ function Calendar() {
   
   return (
     <div>
-      <h2>{year} 年{month}月</h2>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <button onClick={prevMonth}>上個月</button>
+        <h2>{year} 年{month}月</h2>
+        <button onClick={nextMonth}>下個月</button>
+      </div>
 
       {/* 星期標題 */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1px', backgroundColor: '#ccc' }}>
