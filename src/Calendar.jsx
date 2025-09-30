@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Calendar() {
   const [year, setYear] = useState(2025);
@@ -7,6 +7,22 @@ function Calendar() {
   const firstDay = new Date(year, month - 1, 1).getDay();
   const daysInMonth = new Date(year, month, 0).getDate();
   const days = [];
+
+  useEffect(() => {
+    const savedDate = localStorage.getItem('selectedDate');
+    if(savedDate){
+      const date = new Date(savedDate);
+      setSelectedDate(new Date(savedDate));
+      setYear(date.getFullYear());
+      setMonth(date.getMonth() + 1);
+    }
+  }, []);
+
+  useEffect(() => {
+    if(selectedDate){
+      localStorage.setItem('selectedDate', selectedDate.toISOString());
+    }
+  }, [selectedDate]);
 
   const nextMonth = () => {
     setSelectedDate(null);
