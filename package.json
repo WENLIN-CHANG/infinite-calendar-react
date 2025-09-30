@@ -1,7 +1,9 @@
 {
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.13",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "tailwindcss": "^4.1.13",
     "vite": "^7.1.7"
   },
   "name": "infinite-calendar-react",
@@ -16,7 +18,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.3"
   }
