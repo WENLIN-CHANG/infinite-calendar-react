@@ -48,6 +48,23 @@ function Calendar() {
     }
   };
 
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if(e.key === 'ArrowLeft') {
+        prevMonth();
+      }
+      if (e.key === 'ArrowRight') {
+        nextMonth();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    }
+  }, [prevMonth, nextMonth]);
+
   const handleDateClick = (dayNumber) => {
     if (dayNumber === '') return;
     
