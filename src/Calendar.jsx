@@ -12,9 +12,13 @@ function Calendar() {
     const savedDate = localStorage.getItem('selectedDate');
     if(savedDate){
       const date = new Date(savedDate);
-      setSelectedDate(new Date(savedDate));
+      setSelectedDate(date);
       setYear(date.getFullYear());
       setMonth(date.getMonth() + 1);
+    } else {
+      const today = new Date();
+      setYear(today.getFullYear());
+      setMonth(today.getMonth() + 1);
     }
   }, []);
 
