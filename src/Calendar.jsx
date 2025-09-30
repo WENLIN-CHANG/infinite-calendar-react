@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 function Calendar() {
   const [year, setYear] = useState(2025);
@@ -28,7 +28,7 @@ function Calendar() {
     }
   }, [selectedDate]);
 
-  const nextMonth = () => {
+  const nextMonth = useCallback(() => {
     setSelectedDate(null);
     if (month === 12) {
       setYear(year + 1);
@@ -36,9 +36,9 @@ function Calendar() {
     } else {
       setMonth(month + 1);
     }
-  };
+  }, [month]);
 
-  const prevMonth = () => {
+  const prevMonth = useCallback(() => {
     setSelectedDate(null);
     if (month === 1) {
       setYear(year - 1);
@@ -46,14 +46,31 @@ function Calendar() {
     } else {
       setMonth(month - 1);
     }
-  };
+  }, [month]);
 
-  const handleDateClick = (dayNumber) => {
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if(e.key === 'ArrowLeft') {
+        prevMonth();
+      }
+      if (e.key === 'ArrowRight') {
+        nextMonth();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    }
+  }, [prevMonth, nextMonth]);
+
+  const handleDateClick = useCallback((dayNumber) => {
     if (dayNumber === '') return;
-    
+
     const clickedDate = new Date(year, month - 1, dayNumber);
     setSelectedDate(clickedDate);
-  }
+  }, [year, month])
 
   for (let i = 0; i < firstDay; i++) {
     days.push('');
