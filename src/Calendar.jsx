@@ -163,3 +163,4 @@ function Calendar() {
 }
 
 export default Calendar;
+export { generateCalendarDays, isDateSelected };
