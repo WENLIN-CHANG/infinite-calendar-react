@@ -16,6 +16,12 @@ function generateCalendarDays(year ,month) {
   return days
 }
 
+function isDateSelected(selectedDate, year ,month, dayNumber) {
+  if(!selectedDate || dayNumber === '') return false;
+
+  return selectedDate.getDate() === dayNumber && selectedDate.getMonth() === month - 1 && selectedDate.getFullYear() === year;
+}
+
 function Calendar() { 
   const [year, setYear] = useState(2025);
   const [month, setMonth] = useState(10);
@@ -131,7 +137,7 @@ function Calendar() {
       {/* 日期格子 */}
       <div className="grid grid-cols-7 gap-px bg-gray-300 rounded-b-md overflow-hidden">
         {days.map((dayNumber, index) => {
-          const isSelected = selectedDate && dayNumber !== '' && selectedDate.getDate() === dayNumber && selectedDate.getMonth() === month - 1 && selectedDate.getFullYear() === year;
+          const isSelected = isDateSelected(selectedDate, year, month, dayNumber)
           return (
             <div
               key={index}
