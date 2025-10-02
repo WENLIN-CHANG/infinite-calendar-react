@@ -1,12 +1,29 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
-function Calendar() {
-  const [year, setYear] = useState(2025);
-  const [month, setMonth] = useState(10);
-  const [selectedDate, setSelectedDate] = useState(null);
+function generateCalendarDays(year ,month) {
   const firstDay = new Date(year, month - 1, 1).getDay();
   const daysInMonth = new Date(year, month, 0).getDate();
   const days = [];
+
+  for (let i = 0; i < firstDay; i++) {
+    days.push('');
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    days.push(day);
+  }
+
+  return days
+}
+
+function Calendar() { 
+  const [year, setYear] = useState(2025);
+  const [month, setMonth] = useState(10);
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const days = useMemo(() => {
+    return generateCalendarDays(year, month)
+  }, [year, month])
 
   useEffect(() => {
     const savedDate = localStorage.getItem('selectedDate');
@@ -36,7 +53,7 @@ function Calendar() {
     } else {
       setMonth(month + 1);
     }
-  }, [month]);
+  }, [year, month]);
 
   const prevMonth = useCallback(() => {
     setSelectedDate(null);
@@ -46,7 +63,7 @@ function Calendar() {
     } else {
       setMonth(month - 1);
     }
-  }, [month]);
+  }, [year, month]);
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -71,14 +88,6 @@ function Calendar() {
     const clickedDate = new Date(year, month - 1, dayNumber);
     setSelectedDate(clickedDate);
   }, [year, month])
-
-  for (let i = 0; i < firstDay; i++) {
-    days.push('');
-  }
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    days.push(day);
-  }
   
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
