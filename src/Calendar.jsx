@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import CalendarHeader from './CalendarHeader';
 import SelectedDateDisplay from "./SelectedDateDisplay";
 import CalendarWeekdays from "./CalendarWeekdays";
+import CalendarDay from "./CalendarDay";
 
 function generateCalendarDays(year ,month) {
   const firstDay = new Date(year, month - 1, 1).getDay();
@@ -113,27 +114,16 @@ function Calendar() {
 
       <CalendarWeekdays/>
 
-      {/* 日期格子 */}
       <div className="grid grid-cols-7 gap-px bg-gray-300 rounded-b-md overflow-hidden">
         {days.map((dayNumber, index) => {
-          const isSelected = isDateSelected(selectedDate, year, month, dayNumber)
+          const isSelected = isDateSelected(selectedDate, year, month, dayNumber);
           return (
-            <div
+            <CalendarDay
               key={index}
+              day={dayNumber}
+              isSelected={isSelected}
               onClick={() => handleDateClick(dayNumber)}
-              className={`
-                py-3 text-center min-h-[40px] flex items-center justify-center transition-colors duration-200
-                ${
-                  dayNumber === ''
-                    ? 'bg-gray-50 cursor-default'
-                    : isSelected
-                      ? 'bg-blue-600 text-white cursor-pointer font-semibold'
-                      : 'bg-white hover:bg-blue-50 cursor-pointer text-gray-800 hover:text-blue-600'
-                }
-              `}
-            >
-              {dayNumber}
-            </div>
+            />
           );
         })}
       </div>
