@@ -3,6 +3,7 @@ import CalendarHeader from './CalendarHeader';
 import SelectedDateDisplay from "./SelectedDateDisplay";
 import CalendarWeekdays from "./CalendarWeekdays";
 import CalendarDay from "./CalendarDay";
+import CalendarGrid from "./CalendarGrid";
 
 function generateCalendarDays(year ,month) {
   const firstDay = new Date(year, month - 1, 1).getDay();
@@ -114,19 +115,13 @@ function Calendar() {
 
       <CalendarWeekdays/>
 
-      <div className="grid grid-cols-7 gap-px bg-gray-300 rounded-b-md overflow-hidden">
-        {days.map((dayNumber, index) => {
-          const isSelected = isDateSelected(selectedDate, year, month, dayNumber);
-          return (
-            <CalendarDay
-              key={index}
-              day={dayNumber}
-              isSelected={isSelected}
-              onClick={() => handleDateClick(dayNumber)}
-            />
-          );
-        })}
-      </div>
+      <CalendarGrid
+        days={days}
+        selectedDate={selectedDate}
+        year={year}
+        month={month}
+        onDayClick={handleDateClick}
+      />
     </div>
   )
 }
