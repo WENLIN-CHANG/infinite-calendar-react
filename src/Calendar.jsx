@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import CalendarHeader from './CalendarHeader';
 import SelectedDateDisplay from "./SelectedDateDisplay";
+import CalendarWeekdays from "./CalendarWeekdays";
 
 function generateCalendarDays(year ,month) {
   const firstDay = new Date(year, month - 1, 1).getDay();
@@ -110,14 +111,7 @@ function Calendar() {
         selectedDate={selectedDate}
       />
 
-      {/* 星期標題 */}
-      <div className="grid grid-cols-7 gap-px bg-gray-300 mb-px rounded-t-md overflow-hidden">
-        {['日', '一', '二', '三', '四', '五', '六'].map(weekDay => (
-          <div key={weekDay} className="bg-gray-100 py-3 text-center text-sm font-semibold text-gray-700">
-            {weekDay}
-          </div>
-        ))}
-      </div>
+      <CalendarWeekdays/>
 
       {/* 日期格子 */}
       <div className="grid grid-cols-7 gap-px bg-gray-300 rounded-b-md overflow-hidden">
