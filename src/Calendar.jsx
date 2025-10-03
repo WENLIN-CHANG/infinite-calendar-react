@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import CalendarHeader from './CalendarHeader';
+import SelectedDateDisplay from "./SelectedDateDisplay";
 
 function generateCalendarDays(year ,month) {
   const firstDay = new Date(year, month - 1, 1).getDay();
@@ -105,14 +106,9 @@ function Calendar() {
         onNext={nextMonth}
       />
 
-      {/* 選中日期顯示 */}
-      {selectedDate && (
-        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-          <p className="text-blue-800 font-medium">
-            選中日期：{selectedDate.getFullYear()}年{selectedDate.getMonth() + 1}月{selectedDate.getDate()}日
-          </p>
-        </div>
-      )}
+      <SelectedDateDisplay
+        selectedDate={selectedDate}
+      />
 
       {/* 星期標題 */}
       <div className="grid grid-cols-7 gap-px bg-gray-300 mb-px rounded-t-md overflow-hidden">
