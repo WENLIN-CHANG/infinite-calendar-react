@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import CalendarHeader from './CalendarHeader';
 import SelectedDateDisplay from "./SelectedDateDisplay";
 import CalendarWeekdays from "./CalendarWeekdays";
-import CalendarDay from "./CalendarDay";
 import CalendarGrid from "./CalendarGrid";
 
 function generateCalendarDays(year ,month) {
