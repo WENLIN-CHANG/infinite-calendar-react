@@ -4,14 +4,15 @@ import SelectedDateDisplay from "./SelectedDateDisplay";
 import CalendarWeekdays from "./CalendarWeekdays";
 import CalendarGrid from "./CalendarGrid";
 import useLocalStorage from "./hooks/useLocalStorage";
+import useKeyboardNavigation from "./hooks/useKeyboardNavigation";
 
-function generateCalendarDays(year ,month) {
+function generateCalendarDays(year, month) {
   const firstDay = new Date(year, month - 1, 1).getDay();
   const daysInMonth = new Date(year, month, 0).getDate();
   const days = [];
 
   for (let i = 0; i < firstDay; i++) {
-    days.push('');
+    days.push(null);
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
@@ -21,8 +22,8 @@ function generateCalendarDays(year ,month) {
   return days
 }
 
-function isDateSelected(selectedDate, year ,month, dayNumber) {
-  if(!selectedDate || dayNumber === '') return false;
+function isDateSelected(selectedDate, year, month, dayNumber) {
+  if(!selectedDate || !dayNumber) return false;
 
   return selectedDate.getDate() === dayNumber && selectedDate.getMonth() === month - 1 && selectedDate.getFullYear() === year;
 }
@@ -61,45 +62,25 @@ function Calendar() {
     }
   }, []);
 
-  const nextMonth = useCallback(() => {
+  // 通用月份切換邏輯：利用 Date 對象自動處理年份轉換
+  const changeMonth = useCallback((offset) => {
     setSelectedDate(null);
-    if (month === 12) {
-      setYear(year + 1);
-      setMonth(1);
-    } else {
-      setMonth(month + 1);
-    }
-  }, [year, month]);
+    const newDate = new Date(year, month - 1 + offset);
+    setYear(newDate.getFullYear());
+    setMonth(newDate.getMonth() + 1);
+  }, [year, month, setSelectedDate]);
 
-  const prevMonth = useCallback(() => {
-    setSelectedDate(null);
-    if (month === 1) {
-      setYear(year - 1);
-      setMonth(12);
-    } else {
-      setMonth(month - 1);
-    }
-  }, [year, month]);
+  const nextMonth = useCallback(() => changeMonth(1), [changeMonth]);
+  const prevMonth = useCallback(() => changeMonth(-1), [changeMonth]);
 
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if(e.key === 'ArrowLeft') {
-        prevMonth();
-      }
-      if (e.key === 'ArrowRight') {
-        nextMonth();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    }
-  }, [prevMonth, nextMonth]);
+  // 鍵盤導航
+  useKeyboardNavigation({
+    'ArrowLeft': prevMonth,
+    'ArrowRight': nextMonth
+  });
 
   const handleDateClick = useCallback((dayNumber) => {
-    if (dayNumber === '') return;
+    if (!dayNumber) return;
 
     const clickedDate = new Date(year, month - 1, dayNumber);
     setSelectedDate(clickedDate);

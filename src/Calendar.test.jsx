@@ -15,7 +15,7 @@ describe('generateCalendarDays', () => {
 
     const days = generateCalendarDays(year, month);
 
-    const actualDays = days.filter(day => day !== '');
+    const actualDays = days.filter(day => day !== null);
     expect(actualDays.length).toBe(31);
   });
 
@@ -25,7 +25,7 @@ describe('generateCalendarDays', () => {
 
     const days = generateCalendarDays(year, month);
 
-    const actualDays = days.filter(day => day !== '');
+    const actualDays = days.filter(day => day !== null);
     expect(actualDays.length).toBe(28);
   });
 
@@ -35,7 +35,7 @@ describe('generateCalendarDays', () => {
 
     const days = generateCalendarDays(year, month);
 
-    const actualDays = days.filter(day => day !== '');
+    const actualDays = days.filter(day => day !== null);
     expect(actualDays.length).toBe(29);
   });
 
@@ -46,7 +46,7 @@ describe('generateCalendarDays', () => {
 
     const days = generateCalendarDays(year, month);
 
-    const emptyDays = days.filter(day => day === '');
+    const emptyDays = days.filter(day => day === null);
     expect(emptyDays.length).toBe(3);
   });
 
@@ -57,7 +57,7 @@ describe('generateCalendarDays', () => {
 
     const days = generateCalendarDays(year, month);
 
-    const emptyDays = days.filter(day => day === '');
+    const emptyDays = days.filter(day => day === null);
     expect(emptyDays.length).toBe(0);
   });
 
@@ -68,7 +68,7 @@ describe('generateCalendarDays', () => {
 
     const days = generateCalendarDays(year, month);
 
-    const emptyDays = days.filter(day => day === '');
+    const emptyDays = days.filter(day => day === null);
     expect(emptyDays.length).toBe(6);
   });
 
@@ -78,7 +78,7 @@ describe('generateCalendarDays', () => {
 
     const days = generateCalendarDays(year, month);
 
-    const actualDays = days.filter(day => day !== '');
+    const actualDays = days.filter(day => day !== null);
     expect(actualDays.length).toBe(30);
   });
 
@@ -88,7 +88,7 @@ describe('generateCalendarDays', () => {
 
     const days = generateCalendarDays(year, month);
 
-    const actualDays = days.filter(day => day !== '');
+    const actualDays = days.filter(day => day !== null);
     expect(actualDays[0]).toBe(1);
     expect(actualDays[actualDays.length - 1]).toBe(31);
   });
@@ -109,10 +109,10 @@ describe('isDateSelected', () => {
     expect(result).toBe(false);
   });
 
-  it('should return false when dayNumber is empty string', () => {
+  it('should return false when dayNumber is null', () => {
     const selectedDate = new Date(2025, 9, 15);
 
-    const result = isDateSelected(selectedDate, 2025, 10, '');
+    const result = isDateSelected(selectedDate, 2025, 10, null);
 
     expect(result).toBe(false);
   });
@@ -234,8 +234,8 @@ describe('CalendarDay', () => {
     expect(screen.getByText('15')).toBeInTheDocument();
   });
 
-  it('should render empty string for empty day', () => {
-    const { container } = render(<CalendarDay day="" isSelected={false} onClick={() => {}} />);
+  it('should render nothing for null day', () => {
+    const { container } = render(<CalendarDay day={null} isSelected={false} onClick={() => {}} />);
 
     expect(container.textContent).toBe('');
   });
@@ -252,10 +252,10 @@ describe('CalendarDay', () => {
     expect(mockOnClick).toHaveBeenCalledTimes(1);
   });
 
-  it('should not call onClick when clicking on empty day', async () => {
+  it('should not call onClick when clicking on null day', async () => {
     const mockOnClick = vi.fn();
 
-    const { container } = render(<CalendarDay day="" isSelected={false} onClick={mockOnClick} />);
+    const { container } = render(<CalendarDay day={null} isSelected={false} onClick={mockOnClick} />);
 
     const dayElement = container.firstChild;
     await userEvent.click(dayElement);
@@ -279,8 +279,8 @@ describe('CalendarDay', () => {
     expect(dayElement.className).not.toContain('bg-blue-600');
   });
 
-  it('should apply gray background for empty day', () => {
-    const { container } = render(<CalendarDay day="" isSelected={false} onClick={() => {}} />);
+  it('should apply gray background for null day', () => {
+    const { container } = render(<CalendarDay day={null} isSelected={false} onClick={() => {}} />);
 
     const dayElement = container.firstChild;
     expect(dayElement.className).toContain('bg-gray-50');
@@ -289,7 +289,7 @@ describe('CalendarDay', () => {
 
 describe('CalendarGrid', () => {
   it('should render all days', () => {
-    const days = ['', '', '', 1, 2, 3, 4, 5, 6, 7];
+    const days = [null, null, null, 1, 2, 3, 4, 5, 6, 7];
 
     render(
       <CalendarGrid
@@ -345,9 +345,9 @@ describe('CalendarGrid', () => {
     expect(mockOnDayClick).toHaveBeenCalledTimes(1);
   });
 
-  it('should not call onDayClick when clicking empty day', async () => {
+  it('should not call onDayClick when clicking null day', async () => {
     const mockOnDayClick = vi.fn();
-    const days = ['', 1, 2];
+    const days = [null, 1, 2];
 
     const { container } = render(
       <CalendarGrid
@@ -366,7 +366,7 @@ describe('CalendarGrid', () => {
   });
 
   it('should render correct number of day elements', () => {
-    const days = ['', '', 1, 2, 3, 4, 5, 6, 7];
+    const days = [null, null, 1, 2, 3, 4, 5, 6, 7];
 
     const { container } = render(
       <CalendarGrid
