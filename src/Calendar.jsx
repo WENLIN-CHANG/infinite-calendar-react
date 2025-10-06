@@ -3,6 +3,7 @@ import CalendarHeader from './CalendarHeader';
 import SelectedDateDisplay from "./SelectedDateDisplay";
 import CalendarWeekdays from "./CalendarWeekdays";
 import CalendarGrid from "./CalendarGrid";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 function generateCalendarDays(year ,month) {
   const firstDay = new Date(year, month - 1, 1).getDay();
@@ -26,34 +27,39 @@ function isDateSelected(selectedDate, year ,month, dayNumber) {
   return selectedDate.getDate() === dayNumber && selectedDate.getMonth() === month - 1 && selectedDate.getFullYear() === year;
 }
 
-function Calendar() { 
-  const [year, setYear] = useState(2025);
-  const [month, setMonth] = useState(10);
-  const [selectedDate, setSelectedDate] = useState(null);
+function Calendar() {
+  const [year, setYear] = useState(() => {
+    const today = new Date();
+    return today.getFullYear();
+  });
+  const [month, setMonth] = useState(() => {
+    const today = new Date();
+    return today.getMonth() + 1;
+  });
+
+  // 使用 useLocalStorage 儲存 ISO 格式的日期字串
+  const [selectedDateISO, setSelectedDateISO] = useLocalStorage('selectedDate', null);
+
+  // 轉換 ISO 字串為 Date 對象
+  const selectedDate = selectedDateISO ? new Date(selectedDateISO) : null;
+
+  // 包裝 setter 以處理 Date 對象轉換
+  const setSelectedDate = useCallback((date) => {
+    setSelectedDateISO(date ? date.toISOString() : null);
+  }, [setSelectedDateISO]);
 
   const days = useMemo(() => {
     return generateCalendarDays(year, month)
   }, [year, month])
 
+  // 初始化：從 localStorage 載入日期並設定年月
   useEffect(() => {
-    const savedDate = localStorage.getItem('selectedDate');
-    if(savedDate){
-      const date = new Date(savedDate);
-      setSelectedDate(date);
+    if(selectedDateISO){
+      const date = new Date(selectedDateISO);
       setYear(date.getFullYear());
       setMonth(date.getMonth() + 1);
-    } else {
-      const today = new Date();
-      setYear(today.getFullYear());
-      setMonth(today.getMonth() + 1);
     }
   }, []);
-
-  useEffect(() => {
-    if(selectedDate){
-      localStorage.setItem('selectedDate', selectedDate.toISOString());
-    }
-  }, [selectedDate]);
 
   const nextMonth = useCallback(() => {
     setSelectedDate(null);

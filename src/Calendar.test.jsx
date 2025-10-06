@@ -404,7 +404,8 @@ describe('Calendar - Integration Tests', () => {
 
   it('should load saved date from localStorage on mount', () => {
     const savedDate = new Date(2024, 11, 25); // 2024年12月25日
-    localStorage.setItem('selectedDate', savedDate.toISOString());
+    // useLocalStorage 使用 JSON.stringify，所以測試也要用
+    localStorage.setItem('selectedDate', JSON.stringify(savedDate.toISOString()));
 
     render(<Calendar />);
 
@@ -430,8 +431,10 @@ describe('Calendar - Integration Tests', () => {
         expect(savedDate).not.toBeNull();
       });
 
+      // useLocalStorage 使用 JSON.stringify 存儲
       const savedDate = localStorage.getItem('selectedDate');
-      const parsedDate = new Date(savedDate);
+      const isoString = JSON.parse(savedDate);
+      const parsedDate = new Date(isoString);
       expect(parsedDate.getDate()).toBe(15);
     }
   });
@@ -543,7 +546,7 @@ describe('Calendar - Integration Tests', () => {
   it('should handle year transition when going to next month from December', async () => {
     // 設定 localStorage 為 12月的某個日期
     const decemberDate = new Date(2025, 11, 15);
-    localStorage.setItem('selectedDate', decemberDate.toISOString());
+    localStorage.setItem('selectedDate', JSON.stringify(decemberDate.toISOString()));
 
     render(<Calendar />);
 
@@ -563,7 +566,7 @@ describe('Calendar - Integration Tests', () => {
   it('should handle year transition when going to previous month from January', async () => {
     // 設定 localStorage 為 1月的某個日期
     const januaryDate = new Date(2025, 0, 15);
-    localStorage.setItem('selectedDate', januaryDate.toISOString());
+    localStorage.setItem('selectedDate', JSON.stringify(januaryDate.toISOString()));
 
     render(<Calendar />);
 
